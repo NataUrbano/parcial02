@@ -1,6 +1,6 @@
 package com.library.parcial02.repository;
 
-import com.library.parcial02.model.RoleEntity;
+import com.library.parcial02.model.VehicleTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 
-public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
+public interface VehicleTypeRepository extends JpaRepository<VehicleTypeEntity, Long> {
 
-    Optional<RoleEntity> findByName(String name);
+    Optional<VehicleTypeEntity> findByName(String name);
 }
