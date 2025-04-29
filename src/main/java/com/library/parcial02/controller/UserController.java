@@ -29,53 +29,73 @@ public class UserController {
     @GetMapping
     public String getAllUsers(Model model) {
         List<UserEntity> users = userService.findAll();
-        model.addAttribute("users", users);
-        return "users/list";
+        model.addAttribute("items", users);
+        model.addAttribute("entityType", "user");
+        model.addAttribute("entityName", "Usuario");
+        model.addAttribute("title", "Gestión de Usuarios");
+        model.addAttribute("createUrl", "/users/create");
+        return "list";
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("user", new UserEntity());
+        model.addAttribute("item", new UserEntity());
         model.addAttribute("allRoles", roleRepository.findAll());
-        return "users/create";
+        model.addAttribute("entityType", "user");
+        model.addAttribute("formMode", "create");
+        model.addAttribute("title", "Crear Usuario");
+        model.addAttribute("formAction", "/users/create");
+        return "form";
     }
 
     @PostMapping("/create")
-    public String createUser(@Valid @ModelAttribute("user") UserEntity user,
+    public String createUser(@Valid @ModelAttribute("item") UserEntity user,
                              BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("allRoles", roleRepository.findAll());
-            return "users/create";
+            model.addAttribute("entityType", "user");
+            model.addAttribute("formMode", "create");
+            model.addAttribute("title", "Crear Usuario");
+            model.addAttribute("formAction", "/users/create");
+            return "form";
         }
 
         userService.save(user);
 
-        redirectAttributes.addFlashAttribute("successMessage", "User created successfully");
+        redirectAttributes.addFlashAttribute("successMessage", "Usuario creado con éxito");
         return "redirect:/users";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         UserEntity user = userService.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        model.addAttribute("user", user);
+        model.addAttribute("item", user);
         model.addAttribute("allRoles", roleRepository.findAll());
-        return "users/edit";
+        model.addAttribute("entityType", "user");
+        model.addAttribute("formMode", "edit");
+        model.addAttribute("title", "Editar Usuario");
+        model.addAttribute("formAction", "/users/edit/" + id);
+        return "form";
     }
 
     @PostMapping("/edit/{id}")
     public String updateUser(@PathVariable Long id,
-                             @Valid @ModelAttribute("user") UserEntity user,
+                             @Valid @ModelAttribute("item") UserEntity user,
                              BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("allRoles", roleRepository.findAll());
-            return "users/edit";
+            model.addAttribute("entityType", "user");
+            model.addAttribute("formMode", "edit");
+            model.addAttribute("title", "Editar Usuario");
+            model.addAttribute("formAction", "/users/edit/" + id);
+            return "form";
         }
 
         userService.save(user);
 
-        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully");
+        redirectAttributes.addFlashAttribute("successMessage", "Usuario actualizado con éxito");
         return "redirect:/users";
     }
 
@@ -83,9 +103,9 @@ public class UserController {
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             userService.deleteById(id);
-            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully");
+            redirectAttributes.addFlashAttribute("successMessage", "Usuario eliminado con éxito");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Cannot delete user. User has related records.");
+            redirectAttributes.addFlashAttribute("errorMessage", "No se puede eliminar el usuario. Tiene registros asociados.");
         }
 
         return "redirect:/users";

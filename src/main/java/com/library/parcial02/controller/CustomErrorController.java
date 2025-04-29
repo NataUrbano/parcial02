@@ -31,7 +31,7 @@ public class CustomErrorController implements ErrorController {
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 model.addAttribute("errorTitle", "Error del servidor");
                 model.addAttribute("errorMessage", "Ha ocurrido un error en el servidor. Por favor, inténtalo de nuevo más tarde.");
-                return "error/500";
+                return "error/general";
             }
         }
 
